@@ -7,6 +7,10 @@ class ShimmerPos2():
       self.dist = [0.0, 10.0]#[0.0] * self.num 
       self.x = 0.0
       self.y = 0.0
+      self.x_curr = 0.0
+      self.y_curr = 0.0
+      self.x_last = [0.0]*5
+      self.y_last = [0.0]*5
       return
    
    def update(self, client_str):
@@ -31,13 +35,19 @@ class ShimmerPos2():
    def calc(self):
       x_old = self.x
       y_old = self.y
-      self.x = (self.sq(self.anchorDist) + self.sq(self.dist[0]) - self.sq(self.dist[1]))/(2*self.anchorDist)
-      a = self.sq(self.dist[0]) - self.sq(self.x)
+      self.x_curr = (self.sq(self.anchorDist) + self.sq(self.dist[0]) - self.sq(self.dist[1]))/(2*self.anchorDist)
+      a = self.sq(self.dist[0]) - self.sq(self.x_curr)
       if(a < 0):      
-         self.x = x_old
-         self.y = y_old
+         self.x_curr = x_old
+         self.y_curr = y_old
          return -1
-      self.y = math.sqrt(a)
+      self.y_curr = math.sqrt(a)
+      self.x_last[:-1] = self.x_last[1:]
+      self.y_last[:-1] = self.y_last[1:]
+      self.x_last[-1] = self.x_curr
+      self.y_last[-1] = self.y_curr
+      self.x = sum(self.x_last)/len(self.x_last)
+      self.y = sum(self.y_last)/len(self.y_last)
       return 0
       
    def position(self):

@@ -3,8 +3,8 @@ import time, random
 import SocketServer, time,threading,datetime
 
 HOST, PORT1, PORT2 = "192.168.0.129", 9999,9998
-max = 10.0
-margin = max/10
+max = 8.0
+margin = max
 pos = ShimmerPos2.ShimmerPos2(max)
 
    
@@ -12,9 +12,9 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
    def handle(self):
       global pos
       self.data = self.request.recv(1024)#.strip() # strip() to kill \n in the end of string
-      print datetime.datetime.now(), "{} bytes from {}".format(len(self.data), self.client_address[0])
       pos.update(self.data)
       pos.calc()
+      print datetime.datetime.now(), "{} bytes from {}".format(len(self.data), self.client_address[0]),  "x = %0.2f, y = %0.2f" %pos.position()
       #self.request.sendall("ok")
       return
 
@@ -68,9 +68,9 @@ if __name__ == "__main__":
    while 1:
       drawer.shiftin1(pos.x,pos.y)
       time.sleep(0.1)   
-      if cnt >= 10:
-         cnt = 0
-         print datetime.datetime.now(),  "x = %0.2f, y = %0.2f" %pos.position()
+      # if cnt >= 10:
+         # cnt = 0
+         # print datetime.datetime.now(),  "x = %0.2f, y = %0.2f" %pos.position()
       
    
    a = 5.0

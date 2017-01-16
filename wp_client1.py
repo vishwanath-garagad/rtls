@@ -29,11 +29,16 @@ try:
          # Connect to server and send data
          txdata = id.zfill(2)+data_str.zfill(4)+"\n"
          
-         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-         sock.connect((HOST, PORT))
-         sock.send(txdata)
-         sock.close()
-         time.sleep(0.1)
+         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         
+         sock.settimeout(1)
+         try:
+             # Connect to server and send data
+             sock.connect((HOST, PORT))
+             sock.send(txdata)
+         except:
+             sock.close()
+         finally:
+             sock.close()
 
          # Receive data from the server and shut down
          # received = sock.recv(2)

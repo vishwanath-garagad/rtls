@@ -55,8 +55,8 @@ class PlotDrawer():
    def shiftin1(self, x1, y1):
       self.x[:-1] = self.x[1:]
       self.y[:-1] = self.y[1:]
-      self.x[-1] = self.mod(x1)
-      self.y[-1] = self.mod(y1)
+      # self.x[-1] = self.mod(x1)
+      # self.y[-1] = self.mod(y1)
       return
       
    def mod(self, val):
@@ -73,8 +73,8 @@ class PlotDrawer():
             n2 = random.random()
             self.x[-1] += n1
             self.y[-1] += n2
-            self.x[-1] = self.mod(self.x[-1])
-            self.y[-1] = self.mod(self.y[-1])
+            # self.x[-1] = self.mod(self.x[-1])
+            # self.y[-1] = self.mod(self.y[-1])
 
             time.sleep(0.1)
          except :
