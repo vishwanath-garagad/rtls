@@ -2,7 +2,7 @@ import PlotDrawer, ShimmerPos2
 import time, random
 import SocketServer, time,threading,datetime
 
-HOST, PORT = "192.168.0.129", 9999
+HOST, PORT1, PORT2 = "192.168.0.129", 9999,9998
 max = 10.0
 margin = max/10
 pos = ShimmerPos2.ShimmerPos2(max)
@@ -12,7 +12,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
    def handle(self):
       global pos
       self.data = self.request.recv(1024)#.strip() # strip() to kill \n in the end of string
-      print "{} bytes from {}".format(len(self.data), self.client_address[0])
+      print datetime.datetime.now(), "{} bytes from {}".format(len(self.data), self.client_address[0])
       pos.update(self.data)
       pos.calc()
       #self.request.sendall("ok")
@@ -40,8 +40,21 @@ if __name__ == "__main__":
    # ===================
    print "prepare Server..."
    # Create the server, binding to localhost on port 9999
-   server = SocketServer.TCPServer((HOST, PORT), MyTCPHandler)
-
+   server = SocketServer.TCPServer((HOST, PORT1), MyTCPHandler)
+   # Activate the server; this will keep running until you
+   # interrupt the program with Ctrl-C
+   server_thread = threading.Thread(target=server.serve_forever)
+   # server_thread = threading.Thread(target=server.handle_request)
+   # Exit the server thread when the main thread terminates
+   server_thread.daemon = True
+   server_thread.start()    
+   
+   # ===================
+   # init the TCP Server
+   # ===================
+   print "prepare Server..."
+   # Create the server, binding to localhost on port 9999
+   server = SocketServer.TCPServer((HOST, PORT2), MyTCPHandler)
    # Activate the server; this will keep running until you
    # interrupt the program with Ctrl-C
    server_thread = threading.Thread(target=server.serve_forever)
