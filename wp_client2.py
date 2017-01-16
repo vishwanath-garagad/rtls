@@ -1,7 +1,7 @@
 import socket
 import sys, struct, serial, datetime, time
 
-HOST, PORT = "192.168.0.129", 9999
+HOST, PORT = "192.168.0.129", 9998
 # HOST, PORT = "113.210.186.68", 9999
 #data = " ".join(sys.argv[1:])
 
