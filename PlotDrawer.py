@@ -57,6 +57,8 @@ class PlotDrawer():
       self.y[:-1] = self.y[1:]
       # self.x[-1] = self.mod(x1)
       # self.y[-1] = self.mod(y1)
+      self.x[-1] = x1
+      self.y[-1] = y1
       return
       
    def mod(self, val):
