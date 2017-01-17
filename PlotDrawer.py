@@ -7,6 +7,7 @@ class PlotDrawer():
       self.size = 10  
       self.x = [0.0] * self.size
       self.y = [0.0] * self.size
+      self.mod_en = 0
       self.max = 200.0
       self.x_min = -5.0
       self.x_max = self.max+5.0
@@ -47,6 +48,10 @@ class PlotDrawer():
       self.max = m
       return
       
+   def setModular(self, en):
+      self.mod_en = en
+      return
+      
    def ylim(self, y1, y2):
       self.y_min = y1
       self.y_max = y2
@@ -55,10 +60,12 @@ class PlotDrawer():
    def shiftin1(self, x1, y1):
       self.x[:-1] = self.x[1:]
       self.y[:-1] = self.y[1:]
-      # self.x[-1] = self.mod(x1)
-      # self.y[-1] = self.mod(y1)
-      self.x[-1] = x1
-      self.y[-1] = y1
+      if self.mod_en == 1:
+         self.x[-1] = self.mod(x1)
+         self.y[-1] = self.mod(y1)
+      else:
+         self.x[-1] = x1
+         self.y[-1] = y1
       return
       
    def mod(self, val):
@@ -75,8 +82,9 @@ class PlotDrawer():
             n2 = random.random()
             self.x[-1] += n1
             self.y[-1] += n2
-            # self.x[-1] = self.mod(self.x[-1])
-            # self.y[-1] = self.mod(self.y[-1])
+            if self.mod_en == 1:
+               self.x[-1] = self.mod(self.x[-1])
+               self.y[-1] = self.mod(self.y[-1])
 
             time.sleep(0.1)
          except :
@@ -92,6 +100,7 @@ if __name__ == "__main__":
    margin = 2.0
    drawer = PlotDrawer()
    drawer.setmax(max)
+   drawer.setModular(1)
    drawer.xlim(-margin,max+margin)
    drawer.ylim(-margin,max+margin)
    drawer.init()
