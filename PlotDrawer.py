@@ -16,34 +16,22 @@ class PlotDrawer():
       self.y_max = self.max+5.0
       self.extent = (self.x_min, self.x_max, self.y_min, self.y_max)
       
-      self.im = plt.imread("ShimmerOffice.png")
+      self.im = plt.imread("ShimmerOffice2.png")
       
       return
       
    def init(self):      
-      self.fig = plt.figure()
+      self.fig = plt.figure(tight_layout=True, figsize=(11,11))
       self.ax = self.fig.add_subplot(111)
       # some X and Y data
-      self.li, = self.ax.plot(self.x, self.y, '-r.')
+      self.li, = self.ax.plot(self.x, self.y, '-ro')
       # draw and show it
       self.fig.canvas.draw()
       plt.xlim((self.x_min,self.x_max))
       plt.ylim((self.y_min,self.y_max))
-      self.extent = (self.x_min, self.x_max, self.y_min, self.y_max)
-      plt.show(block=False)#True      
-      
-      
-      if 0:
-         plt.switch_backend('TkAgg') #TkAgg (instead Qt4Agg)
-         print '#1 Backend:',plt.get_backend()
-         plt.plot([1,2,6,4])
-         mng = plt.get_current_fig_manager()
-         ### works on Ubuntu??? >> did NOT working on windows
-         # mng.resize(*mng.window.maxsize())
-         mng.window.state('zoomed') #works fine on Windows!
-         plt.show() #close the figure to run the next section
-
-
+      self.extent = (self.x_min, self.x_max, self.y_min, self.y_max)      
+      implot = plt.imshow(self.im, extent=self.extent)      
+      plt.show(block=False)#True    
 
       return
       
@@ -53,11 +41,10 @@ class PlotDrawer():
             self.li.set_ydata(self.y)
             self.li.set_xdata(self.x)
             self.fig.canvas.draw()
-            if 1:
-               #im = plt.imread("ShimmerOffice.png")
-               implot = plt.imshow(self.im, extent=self.extent)
-            plt.show(block=False)#True
-            time.sleep(0.1)
+            # if 1:
+               # implot = plt.imshow(self.im, extent=self.extent)
+            #plt.show(block=False)#True
+            #time.sleep(0.1)
          except :
             break
       return

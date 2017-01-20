@@ -14,7 +14,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
       self.data = self.request.recv(1024)#.strip() # strip() to kill \n in the end of string
       pos.update(self.data)
       pos.calc()
-      print datetime.datetime.now(), "{} bytes from {}".format(len(self.data), self.client_address[0]),  "x = %0.2f, y = %0.2f" %pos.position()
+      print datetime.datetime.now(), "{} from {}".format(self.data[:-1], self.client_address[0]),  "x = %0.2f, y = %0.2f" %pos.position()
       #self.request.sendall("ok")
       return
 
@@ -27,8 +27,10 @@ if __name__ == "__main__":
    print "starting drawer..."
    drawer = PlotDrawer.PlotDrawer()
    drawer.setmax(max)
-   drawer.xlim(-margin,max+margin)
-   drawer.ylim(-margin,max+margin)
+   # drawer.xlim(-margin,max+margin)
+   # drawer.ylim(-margin,max+margin)
+   drawer.xlim(-9.8,10.2)
+   drawer.ylim(-5.1,22.1)
    drawer.init()
    drawer_thread = threading.Thread(target=drawer.run)
    # Exit the server thread when the main thread terminates

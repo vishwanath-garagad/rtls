@@ -1,8 +1,51 @@
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-import numpy as np
+#!/usr/bin/env python
+
+#minimal example...
+
+import matplotlib, sys
+matplotlib.use('TkAgg')
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib import pylab as plt
+from scipy import ndimage
 import random, time, threading, datetime
+import Tkinter as Tk
     
+root = Tk.Tk()
+root.wm_title("minimal example")
+
+root.image = plt.imread('ShimmerOffice1.png')
+fig = plt.figure(figsize=(10,10))
+im = plt.imshow(root.image) # later use a.set_data(new_data)
+ax = plt.gca()
+ax.set_xticklabels([]) 
+ax.set_yticklabels([])
+
+# a tk.DrawingArea
+canvas = FigureCanvasTkAgg(fig, master=root)
+canvas.show()
+canvas.get_tk_widget().pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
+
+def rotate(*args):
+    print 'rotate button press...'
+    root.image = ndimage.rotate(root.image, 90)
+    im.set_data(root.image)
+    canvas.draw()
+    
+def quit(*args):
+    print 'quit button press...'
+    root.quit()     
+    root.destroy() 
+
+button_rotate = Tk.Button(master = root, text = 'Rotate', command = rotate)
+button_quit = Tk.Button(master = root, text = 'Quit', command = quit)
+
+button_quit.pack(side=Tk.LEFT)
+button_rotate.pack()
+
+Tk.mainloop()
+
+
+
 class PlotDrawer():  
    def __init__(self):
       self.size = 10  
@@ -23,25 +66,33 @@ class PlotDrawer():
    def init(self):      
       self.fig = plt.figure()
       self.ax = self.fig.add_subplot(111)
+      self.ax.set_title("Shimmer Office RTLS")
+      self.ax.set_xlabel("X (m)")
+      self.ax.set_ylabel("Y (m)")
       # some X and Y data
       self.li, = self.ax.plot(self.x, self.y, '-r.')
       # draw and show it
-      self.fig.canvas.draw()
-      plt.xlim((self.x_min,self.x_max))
-      plt.ylim((self.y_min,self.y_max))
-      self.extent = (self.x_min, self.x_max, self.y_min, self.y_max)
-      plt.show(block=False)#True      
-      
-      
-      if 0:
+      if 1:
          plt.switch_backend('TkAgg') #TkAgg (instead Qt4Agg)
-         print '#1 Backend:',plt.get_backend()
-         plt.plot([1,2,6,4])
+         # print '#1 Backend:',plt.get_backend()
          mng = plt.get_current_fig_manager()
          ### works on Ubuntu??? >> did NOT working on windows
          # mng.resize(*mng.window.maxsize())
          mng.window.state('zoomed') #works fine on Windows!
-         plt.show() #close the figure to run the next section
+         
+      canvas = FigureCanvasTkAgg(self.fig, master=root)
+      #canvas.show()
+      canvas.get_tk_widget().pack(side=Tkinter.TOP, fill=Tkinter.BOTH, expand=1)
+
+      self.fig.canvas.draw()
+      plt.xlim((self.x_min,self.x_max))
+      plt.ylim((self.y_min,self.y_max))
+
+      self.extent = (self.x_min, self.x_max, self.y_min, self.y_max)
+      
+      canvas.show()
+      #plt.show(block=False)#True      
+      
 
 
 
@@ -57,7 +108,7 @@ class PlotDrawer():
                #im = plt.imread("ShimmerOffice.png")
                implot = plt.imshow(self.im, extent=self.extent)
             plt.show(block=False)#True
-            time.sleep(0.1)
+            #time.sleep(0.1)
          except :
             break
       return
@@ -116,8 +167,6 @@ class PlotDrawer():
    
 
 if __name__ == "__main__":
-   print __name__, "start ..."
-   
    print "start drawer"
    max = 9.0
    margin = 2.0
